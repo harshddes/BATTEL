@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SOURCE_DIR: "./v2"
+  SOURCE_DIR: "v2"
   NODE_VERSION: "18"
 
 jobs:
@@ -255,6 +255,9 @@ jobs:
           </url>
         </urlset>
         EOF
+        
+        # Fix the date in sitemap
+        sed -i "s/\$(date -u +%Y-%m-%d)/$(date -u +%Y-%m-%d)/" _site/sitemap.xml
         
         # Generate robots.txt
         cat > _site/robots.txt << 'EOF'
