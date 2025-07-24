@@ -148,7 +148,11 @@ class BattelApp {
 
         // Monitor memory usage
         if (performance.memory) {
-            setInterval(() => this.monitorMemory(), 30000);
+            setInterval(() => {
+                if (this.monitorMemory) {
+                    this.monitorMemory();
+                }
+            }, 30000);
         }
     }
 
