@@ -1,0 +1,152 @@
+name: ✨ Feature Request
+description: Suggest a new feature for BATTEL
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+assignees:
+  - battel-maintainers
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please fill out the sections below to help us understand your request.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you have completed the following
+      options:
+        - label: I have searched existing issues and feature requests
+          required: true
+        - label: I have checked the project roadmap and documentation
+          required: true
+        - label: This feature aligns with BATTEL's privacy-preserving goals
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: Which area does this feature belong to?
+      options:
+        - Authentication & Security
+        - Cryptography & Privacy
+        - File Management
+        - Project Management
+        - Testing Framework
+        - API & Integrations
+        - User Interface
+        - Performance & Optimization
+        - Developer Experience
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Critical (Blocking core functionality)
+        - High (Significantly improves user experience)
+        - Medium (Nice to have improvement)
+        - Low (Minor enhancement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: |
+        Describe the problem or limitation you're facing...
+        
+        Example:
+        - As a developer, I need...
+        - Currently it's difficult to...
+        - Users are unable to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed solution in detail
+      placeholder: |
+        Describe how you envision this feature working...
+        
+        Example:
+        - Add a new API endpoint that...
+        - Implement a UI component that...
+        - Integrate with X service to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternative solutions have you considered?
+      placeholder: |
+        Describe any alternative approaches...
+        
+        Example:
+        - Instead of X, we could do Y...
+        - Another approach would be...
+        - I considered using Z but...
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits & Impact
+      description: How will this feature benefit users and the project?
+      placeholder: |
+        Describe the benefits...
+        
+        Example:
+        - Improves security by...
+        - Reduces development time by...
+        - Enables users to...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation Considerations
+      description: Technical aspects to consider
+      options:
+        - label: This feature requires database schema changes
+        - label: This feature needs new API endpoints
+        - label: This feature affects cryptographic operations
+        - label: This feature impacts privacy/security model
+        - label: This feature requires UI/frontend changes
+        - label: This feature needs documentation updates
+        - label: This feature affects performance
+        - label: This feature requires third-party integrations
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups/Examples
+      description: If applicable, add mockups, wireframes, or code examples
+      placeholder: |
+        You can attach images, code snippets, or links to mockups...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other information that might be helpful
+      placeholder: |
+        Add any other context about the feature request...
+        
+        Example:
+        - Related to issue #123
+        - Similar to feature in Project X
+        - Research links or references... 

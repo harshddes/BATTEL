@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestBed Zero - Secure Testing Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .security-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 10px 20px;
+            margin: 20px auto;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .zero-knowledge-info {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .zero-knowledge-info h4 {
+            color: #4c51bf;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 2rem;
+            color: #4c51bf;
+            margin-bottom: 10px;
+        }
+
+        .feature-card h5 {
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .auth-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .auth-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .auth-card h3 {
+            color: #4c51bf;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4c51bf;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 81, 191, 0.4);
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .dashboard {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid #4c51bf;
+            background: transparent;
+            color: #4c51bf;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active {
+            background: #4c51bf;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #4c51bf;
+            background: #edf2f7;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-processing {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-encrypted {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .status-error {
+            background: #feb2b2;
+            color: #c53030;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #fbb6ce;
+        }
+
+        .alert-info {
+            background: #bee3f8;
+            color: #2b6cb0;
+            border: 1px solid #90cdf4;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> TestBed Zero</h1>
+            <p>Secure Testing Platform with Zero-Knowledge Architecture</p>
+            <div class="security-badge">
+                <i class="fas fa-lock"></i> End-to-End Encrypted • Zero Server Access
+            </div>
+        </div>
+
+        <!-- Zero-Knowledge Features Info -->
+        <div class="zero-knowledge-info">
+            <h4><i class="fas fa-info-circle"></i> How Zero-Knowledge Works</h4>
+            <p>All data is encrypted in your browser before being sent to our servers. We never see your passwords, test data, or files. Even if our servers are compromised, your data remains secure because we don't have the keys to decrypt it.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-key"></i>
+                    <h5>Client-Side Encryption</h5>
+                    <p>AES-256 encryption happens in your browser using Web Crypto API</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-user-secret"></i>
+                    <h5>Password-Derived Keys</h5>
+                    <p>Your password generates encryption keys locally - never sent to server</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-eye-slash"></i>
+                    <h5>Zero Server Access</h5>
+                    <p>Server only stores encrypted data - cannot read your content</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-share-alt"></i>
+                    <h5>Secure Sharing</h5>
+                    <p>Share encrypted data with testing facilities using asymmetric cryptography</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Area -->
+        <div id="alert-area"></div>
+
+        <!-- Authentication Section -->
+        <div id="auth-section" class="auth-section">
+            <!-- Registration Form -->
+            <div class="auth-card">
+                <h3><i class="fas fa-user-plus"></i> Create Account</h3>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password (min 8 characters)</label>
+                        <input type="password" id="reg-password" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-shield-alt"></i> Create Secure Account
+                    </button>
+                </form>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #718096;">
+                    <i class="fas fa-info-circle"></i> Your password creates encryption keys locally - we never see it!
+                </p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-card">
+                <h3><i class="fas fa-sign-in-alt"></i> Sign In</h3>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-unlock"></i> Access Encrypted Data
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <div>
+                    <span id="user-email" style="margin-right: 20px; color: #4c51bf;"></span>
+                    <button id="logout-btn" class="btn btn-secondary" style="width: auto; padding: 8px 16px;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-nav">
+                <button class="nav-btn active" data-tab="projects">
+                    <i class="fas fa-folder"></i> Projects
+                </button>
+                <button class="nav-btn" data-tab="files">
+                    <i class="fas fa-file"></i> Files
+                </button>
+                <button class="nav-btn" data-tab="tests">
+                    <i class="fas fa-vial"></i> Tests
+                </button>
+                <button class="nav-btn" data-tab="share">
+                    <i class="fas fa-share"></i> Share
+                </button>
+            </div>
+
+            <!-- Projects Tab -->
+            <div id="projects-tab" class="tab-content active">
+                <h3>Projects</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="project-name" placeholder="Project name" style="width: 300px; padding: 10px; margin-right: 10px;">
+                    <button id="create-project-btn" class="btn btn-primary" style="width: auto; padding: 10px 20px;">
+                        <i class="fas fa-plus"></i> Create Project
+                    </button>
+                </div>
+                <div id="projects-list"></div>
+            </div>
+
+            <!-- Files Tab -->
+            <div id="files-tab" class="tab-content">
+                <h3>Encrypted Files</h3>
+                <div class="file-upload-area" id="file-upload-area">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 15px;"></i>
+                    <p>Drop files here or click to upload</p>
+                    <p style="font-size: 0.9rem; color: #718096; margin-top: 10px;">
+                        Files are encrypted in your browser before upload
+                    </p>
+                    <input type="file" id="file-input" multiple style="display: none;">
+                </div>
+                <div id="files-list" class="file-list"></div>
+            </div>
+
+            <!-- Tests Tab -->
+            <div id="tests-tab" class="tab-content">
+                <h3>Test Management</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="test-name" placeholder="Test name" style="width: 200px; padding: 10px; margin-right: 10px;">
+                    <select id="test-type" style="width: 150px; padding: 10px; margin-right: 10px;">
+                        <option value="unit">Unit Test</option>
+                        <option value="integration">Integration</option>
+                        <option value="e2e">End-to-End</option>
+                        <option value="performance">Performance</option>
+                    </select>
+                    <button id="create-test-btn" class="btn btn-primary" style="width: auto; padding: 10px 20px;">
+                        <i class="fas fa-plus"></i> Create Test
+                    </button>
+                </div>
+                <div id="tests-list"></div>
+            </div>
+
+            <!-- Share Tab -->
+            <div id="share-tab" class="tab-content">
+                <h3>Secure Sharing</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="email" id="share-email" placeholder="Recipient email" style="width: 250px; padding: 10px; margin-right: 10px;">
+                    <select id="share-project" style="width: 200px; padding: 10px; margin-right: 10px;">
+                        <option value="">Select project to share</option>
+                    </select>
+                    <button id="share-btn" class="btn btn-primary" style="width: auto; padding: 10px 20px;">
+                        <i class="fas fa-share"></i> Share Encrypted
+                    </button>
+                </div>
+                <p style="color: #718096; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> Shared data remains encrypted - recipients need proper keys to access.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="crypto.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
