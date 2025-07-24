@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestBedz - Your Turn-Key Aerospace Testing Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .btn-primary { background: linear-gradient(90deg, #3b82f6, #8b5cf6); transition: all 0.3s ease; color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); }
+        .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: translateY(0); box-shadow: none; }
+        .form-step, .conditional-field { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .form-step.active, .conditional-field.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page, .view, .public-section { display: none; }
+        .page.active, .view.active, .public-section.active { display: block; }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-newrequest, .status-awaitingfacilityresponse { background-color: #dbeafe; color: #1e40af; }
+        .status-facilitymatching, .status-contractpending { background-color: #fef3c7; color: #92400e; }
+        .status-planning { background-color: #ede9fe; color: #5b21b6; }
+        .status-testing { background-color: #d9f99d; color: #3f6212; }
+        .status-complete { background-color: #d1fae5; color: #065f46; }
+        .tooltip { position: relative; display: inline-block; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #1f2937; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; font-weight: normal; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; padding-left: 1.5rem; padding-right: 1.5rem; }
+        .faq-answer.open { max-height: 500px; padding-top: 1rem; padding-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div id="app-container">
+        <!-- =================================================================== -->
+        <!-- PUBLIC-FACING WEBSITE (Logged Out State)                          -->
+        <!-- =================================================================== -->
+        <div id="public-page" class="page active">
+            <header class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-40">
+                <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <a href="#" data-section="home-content" class="public-nav-item flex items-center space-x-2">
+                        <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="text-xl font-bold text-gray-800">TestBedz</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#" data-section="home-content" class="public-nav-item font-semibold text-blue-600 hover:text-blue-600">Home</a>
+                        <a href="#" data-section="faq-content" class="public-nav-item font-semibold text-gray-600 hover:text-blue-600">FAQ</a>
+                        <a href="#" data-section="resources-content" class="public-nav-item font-semibold text-gray-600 hover:text-blue-600">Resources</a>
+                        <button id="show-login-btn" class="font-semibold text-gray-600 hover:text-blue-600">Log In</button>
+                        <a href="#rfq-form" class="btn-primary font-semibold px-5 py-2 rounded-lg">Get Started</a>
+                    </div>
+                </nav>
+            </header>
+            <main>
+                <!-- Home Page Content -->
+                <div id="home-content" class="public-section active">
+                    <section class="container mx-auto px-6 pt-24 pb-16 text-center"><h1 class="font-poppins text-4xl md:text-6xl font-bold text-gray-900 leading-tight">Your End-to-End Testing Partner.</h1><p class="text-xl md:text-2xl mt-4 text-gray-600 max-w-3xl mx-auto">From initial planning to final report, TestBedz is your dedicated concierge for aerospace testing. Submit a request and get a dedicated dashboard to manage your entire test campaign.</p><div class="mt-8"><a href="#rfq-form" class="btn-primary text-white font-bold px-8 py-4 rounded-lg text-lg">Create Your Test Campaign</a></div></section>
+                    <section id="rfq-form" class="py-20">
+                        <div class="container mx-auto px-6">
+                            <div class="bg-white max-w-4xl mx-auto p-8 md:p-12 rounded-xl shadow-2xl border border-gray-200">
+                                <h2 class="font-poppins text-3xl font-bold text-center text-gray-900 mb-4">Create Your Test Campaign Now!</h2>
+                                <p class="text-lg text-center text-gray-600 mb-8">Create your Project Ticket!</p>
+                                <form id="signup-form">
+                                    <div class="form-step active"><h3 class="font-semibold text-xl mb-6 text-center">Step 1: Company & Contact</h3><div class="space-y-6"><div><label for="CompanyName" class="block text-sm font-medium text-gray-700">Company Name</label><input type="text" name="CompanyName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="ContactName" class="block text-sm font-medium text-gray-700">Your Full Name</label><input type="text" name="ContactName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="ContactEmail" class="block text-sm font-medium text-gray-700">Contact Email</label><input type="email" name="ContactEmail" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="ZipCode" class="block text-sm font-medium text-gray-700">Preferred Testing Area (Zip Code)</label><input type="text" name="ZipCode" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div></div></div>
+                                    <div class="form-step"><h3 class="font-semibold text-xl mb-6 text-center">Step 2: Primary Test Needs</h3><div class="space-y-6">
+                                        <div><label for="TestPurpose" class="block text-sm font-medium text-gray-700">Campaign Purpose</label><textarea name="TestPurpose" rows="2" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Qualification for launch, developmental testing..."></textarea></div>
+                                        <div><label for="initial-test-type" class="block text-sm font-medium text-gray-700">Primary Test Type</label><select id="initial-test-type" name="PrimaryTestType" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"><option value="">Select a test...</option><option value="Vibration">Vibration</option><option value="Thermal">Thermal</option><option value="Shock">Shock</option></select></div>
+                                        <div id="Vibration-params" class="conditional-field space-y-2"><label class="block text-sm font-medium text-gray-700">Vibration Parameters</label><input type="text" name="FreqRange" placeholder="Approx. Frequency Range (e.g., 5-2000 Hz)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div>
+                                        <div id="Thermal-params" class="conditional-field space-y-2"><label class="block text-sm font-medium text-gray-700">Thermal Parameters</label><input type="text" name="TempRange" placeholder="Approx. Temperature Range (e.g., -70 to 120 C)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div>
+                                        <div id="Shock-params" class="conditional-field space-y-2"><label class="block text-sm font-medium text-gray-700">Shock Parameters</label><input type="text" name="ShockRange" placeholder="Approx. Peak Acceleration (e.g., 1500 G)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div>
+                                    </div></div>
+                                    <div class="form-step"><h3 class="font-semibold text-xl mb-6 text-center">Step 3: Asset & Schedule</h3><div class="space-y-6"><div class="grid grid-cols-2 gap-4"><div><label for="ArticleDimensions" class="block text-sm font-medium text-gray-700">Asset Dimensions (cm)</label><input type="text" name="ArticleDimensions" placeholder="e.g., 30x20x10" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="ArticleWeight" class="block text-sm font-medium text-gray-700">Asset Mass (kg)</label><input type="number" name="ArticleWeight" placeholder="e.g., 5" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div></div><div><label for="DesiredStartDate" class="block text-sm font-medium text-gray-700">Estimated Start Date</label><input type="date" name="DesiredStartDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="EstDuration" class="block text-sm font-medium text-gray-700">Estimated Duration (days)</label><input type="number" name="EstDuration" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., 3"></div><div class="flex items-center"><input type="checkbox" id="duration-na" name="duration-na" class="h-4 w-4 text-blue-600 border-gray-300 rounded"><label for="duration-na" class="ml-2 block text-sm text-gray-900">I'm not sure / N/A</label></div></div></div>
+                                    <div class="form-step"><h3 class="font-semibold text-xl mb-6 text-center">Step 4: Create Your Secure Account</h3><div class="space-y-6"><div><label for="Username" class="block text-sm font-medium text-gray-700">Username</label><input type="text" name="Username" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="Password" class="block text-sm font-medium text-gray-700">Password</label><input type="password" name="Password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div></div></div>
+                                    <div class="mt-10 flex justify-between"><button type="button" id="prev-btn" class="bg-gray-200 text-gray-700 font-semibold px-6 py-2 rounded-lg" style="display: none;">Back</button><button type="button" id="next-btn" class="btn-primary font-semibold px-6 py-2 rounded-lg ml-auto">Next</button><button type="submit" id="submit-btn" class="btn-primary font-semibold px-6 py-2 rounded-lg ml-auto" style="display: none;">Submit & Create Account</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- Other public sections (FAQ, Resources) -->
+                <div id="faq-content" class="public-section">
+                    <section class="py-20">
+                        <div class="container mx-auto px-6">
+                            <h1 class="font-poppins text-4xl font-bold text-center text-gray-900 mb-4">Frequently Asked Questions</h1>
+                            <p class="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">Find answers to common questions about our services, processes, and how we can help your project succeed.</p>
+                            <div class="max-w-3xl mx-auto space-y-4">
+                                <div class="bg-white rounded-lg shadow-md"><div class="faq-question cursor-pointer p-6 flex justify-between items-center"><h3 class="text-lg font-semibold text-gray-800">What kind of testing services do you offer?</h3><svg class="faq-icon w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div><div class="faq-answer text-gray-600"><p>TestBedz provides a comprehensive suite of aerospace testing services, including but not limited to: Vibration, Thermal, Vacuum (TVAC), EMI/EMC, Non-Destructive Testing (NDT), and Wind Tunnel testing. We act as your single point of contact to manage the entire process with our network of certified lab partners.</p></div></div>
+                                <div class="bg-white rounded-lg shadow-md"><div class="faq-question cursor-pointer p-6 flex justify-between items-center"><h3 class="text-lg font-semibold text-gray-800">How does the process work?</h3><svg class="faq-icon w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div><div class="faq-answer text-gray-600"><p>It's simple! 1) You submit a test campaign request through our platform. 2) We match your requirements with the best-suited facilities in our network. 3) We handle all the planning, logistics, and communication. 4) You monitor progress and access results through your secure client dashboard. 5) We deliver a final, comprehensive test report.</p></div></div>
+                                <div class="bg-white rounded-lg shadow-md"><div class="faq-question cursor-pointer p-6 flex justify-between items-center"><h3 class="text-lg font-semibold text-gray-800">Who are your testing partners?</h3><svg class="faq-icon w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div><div class="faq-answer text-gray-600"><p>We partner with a wide range of accredited and certified testing laboratories across the country. Our partners are rigorously vetted to ensure they meet the highest industry standards, including ISO, NADCAP, and specific OEM certifications. Confidentiality agreements prevent us from listing them publicly, but we match your project's specific needs (e.g., ITAR compliance) to the right facility.</p></div></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="resources-content" class="public-section">
+                    <section class="py-20">
+                        <div class="container mx-auto px-6">
+                            <h1 class="font-poppins text-4xl font-bold text-center text-gray-900 mb-4">Educational Resources</h1>
+                            <p class="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore our articles and guides on aerospace testing to stay informed and prepare for your next project.</p>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"><img src="https://placehold.co/600x400/3b82f6/ffffff?text=Vibration+Testing" alt="Vibration testing illustration" class="w-full h-48 object-cover"><div class="p-6 flex-grow"><h3 class="font-poppins font-bold text-xl mb-2">An Introduction to Sine and Random Vibration Testing</h3><p class="text-gray-600 mb-4">Understand the key differences between sine and random vibration profiles and when to apply each for your hardware qualification.</p></div><div class="p-6 pt-0"><a href="#" class="font-semibold text-blue-600 hover:text-blue-700">Read More →</a></div></div>
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"><img src="https://placehold.co/600x400/8b5cf6/ffffff?text=TVAC+Testing" alt="Thermal vacuum chamber illustration" class="w-full h-48 object-cover"><div class="p-6 flex-grow"><h3 class="font-poppins font-bold text-xl mb-2">Demystifying TVAC: What to Expect in a Thermal Vacuum Test</h3><p class="text-gray-600 mb-4">From outgassing to temperature cycling, we break down the critical phases of a TVAC test and how to prepare your test article.</p></div><div class="p-6 pt-0"><a href="#" class="font-semibold text-blue-600 hover:text-blue-700">Read More →</a></div></div>
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"><img src="https://placehold.co/600x400/10b981/ffffff?text=Test+Fixtures" alt="Test fixture illustration" class="w-full h-48 object-cover"><div class="p-6 flex-grow"><h3 class="font-poppins font-bold text-xl mb-2">The Unsung Hero: Why Good Test Fixture Design is Crucial</h3><p class="text-gray-600 mb-4">A great test can be ruined by a poor fixture. Learn the design principles for creating a fixture that won't compromise your results.</p></div><div class="p-6 pt-0"><a href="#" class="font-semibold text-blue-600 hover:text-blue-700">Read More →</a></div></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECURE DASHBOARD (Logged In State)                                -->
+        <!-- =================================================================== -->
+        <div id="dashboard-page" class="page">
+            <div class="flex h-screen bg-gray-100">
+                <!-- Sidebar -->
+                <div class="hidden md:flex flex-col w-64 bg-white shadow-lg">
+                    <div class="flex items-center justify-center h-20 border-b"><div class="flex items-center space-x-2"><svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="text-xl font-bold text-gray-800">TestBedz</span></div></div>
+                    <nav class="flex-grow px-4 py-6">
+                        <a href="#" data-view="dashboard" class="nav-item active flex items-center p-3 my-1 text-gray-700 rounded-lg bg-gray-200"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Campaigns</a>
+                        <a href="#" data-view="calendar" class="nav-item flex items-center p-3 my-1 text-gray-700 rounded-lg hover:bg-gray-200"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>Facility Calendar</a>
+                    </nav>
+                    <div class="px-4 py-6 border-t"><button id="logout-btn" class="w-full text-left flex items-center p-3 my-1 text-gray-700 rounded-lg hover:bg-gray-200"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>Log Out</button></div>
+                </div>
+                <!-- Main Content -->
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                       <div id="dashboard-view" class="view active">
+                          <div class="flex justify-between items-center mb-6">
+                              <h1 class="font-poppins text-3xl font-bold text-gray-900">Your Test Campaigns</h1>
+                              <button id="show-new-campaign-modal-btn" class="btn-primary font-semibold px-4 py-2 rounded-lg">+ New Campaign</button>
+                          </div>
+                          <div class="bg-white p-6 rounded-xl shadow-md">
+                              <div id="campaign-tickets-container" class="w-full text-left"></div>
+                          </div>
+                        </div>
+                        <div id="campaign-detail-view" class="view">
+                            <button id="back-to-dashboard-btn" class="font-semibold text-blue-600 mb-6">← Back to All Campaigns</button>
+                            <div class="flex justify-between items-start"><h2 class="font-poppins text-2xl font-bold" id="detail-campaign-purpose"></h2><span id="detail-campaign-status" class="status-badge"></span></div>
+                            <p class="text-gray-600 mt-2" id="detail-campaign-background"></p>
+                            <hr class="my-6">
+                            <h3 class="font-poppins text-xl font-bold mb-4">Individual Tests in this Campaign</h3>
+                            <div id="tests-container" class="space-y-4"></div>
+                            <div class="mt-6"><button id="show-add-test-modal-btn" class="w-full text-center py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold rounded-lg border-2 border-dashed border-blue-200 transition-colors">+ Add a New Test</button></div>
+                        </div>
+                        <div id="calendar-view" class="view">
+                            <h1 class="font-poppins text-3xl font-bold text-gray-900">Facility Calendar</h1>
+                            <p class="text-lg text-gray-600 mt-2">View high-level availability for your matched testing facilities.</p>
+                            <div class="mt-8 bg-white p-6 rounded-xl shadow-md">
+                                <p class="text-center text-gray-500">Calendar functionality coming soon.</p>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50 p-4"><div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full relative"><button id="close-login-modal-btn" class="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button><h2 class="font-poppins text-2xl font-bold text-gray-900 mb-4">Client Log In</h2><form id="login-form" class="space-y-4"><input type="text" id="login-username" placeholder="Enter any username" required class="w-full border-gray-300 rounded-md shadow-sm"><input type="password" id="login-password" placeholder="Enter any password" required class="w-full border-gray-300 rounded-md shadow-sm"><button type="submit" class="w-full btn-primary font-semibold py-3 rounded-lg">Log In</button></form></div></div>
+        <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50 p-4"><div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full"><h3 id="message-title" class="font-poppins text-xl font-bold text-gray-900 mb-4"></h3><p id="message-text" class="text-gray-600 mb-6"></p><button id="close-message-btn" class="w-full btn-primary font-semibold py-2 rounded-lg">Close</button></div></div>
+        <div id="add-test-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50 p-4"><div class="bg-white p-8 rounded-xl shadow-2xl max-w-3xl w-full relative max-h-[90vh] overflow-y-auto"><button id="close-add-test-modal-btn" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button><h2 class="font-poppins text-2xl font-bold text-gray-900 mb-6">Add Specific Test Details</h2><form id="add-test-form" class="space-y-6"><div id="add-test-form-steps"></div><div class="pt-6 border-t flex justify-end"><button type="submit" class="btn-primary font-semibold py-3 px-6 rounded-lg">Add Test to Campaign</button></div></form></div></div>
+        <div id="new-campaign-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50 p-4"><div class="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full relative"><button id="close-new-campaign-modal-btn" class="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button><h2 class="font-poppins text-2xl font-bold mb-4">Create New Test Campaign</h2><form id="new-campaign-form" class="space-y-4"><div><label class="block text-sm font-medium text-gray-700">Campaign Purpose</label><input name="TestPurpose" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" /></div><div><label class="block text-sm font-medium text-gray-700">Campaign Background</label><textarea name="TestBackground" rows="3" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea></div><div class="flex justify-end"><button type="submit" class="btn-primary font-semibold px-4 py-2 rounded-lg">Create</button></div></form></div></div>
+        <div id="facility-intro-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50 p-4"><div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full"><h2 class="font-poppins text-2xl font-bold text-gray-900 mb-2">You've Been Matched!</h2><p class="text-gray-600 mb-4">Based on your request, we've matched you with:</p><h3 id="facility-name" class="font-poppins text-xl font-bold text-blue-600 mb-4"></h3><p id="facility-blurb" class="text-gray-600 mb-6 text-left"></p><button id="proceed-to-dashboard-btn" class="w-full btn-primary font-semibold py-2 rounded-lg">Proceed to Your Dashboard</button></div></div>
+
+        <!-- Dynamic Form Field Templates -->
+        <div id="field-templates" class="hidden">
+            <div id="standards-step" class="space-y-4"><div><label class="block text-sm font-medium text-gray-700">Relevant Standard</label><p class="text-xs text-gray-500">Selecting a standard helps us auto-populate test parameters later.</p><select name="Standard" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"><option value="Other">Other / N/A / I'm not sure</option><option value="GEVS">GEVS (NASA Standard)</option><option value="MIL-STD">MIL-STD (Military Standard)</option></select></div><div><label class="block text-sm font-medium text-gray-700">Test Type</label><select name="TestType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required><option value="">Select a test...</option><option value="Vibration">Vibration</option><option value="Thermal">Thermal</option><option value="Shock">Shock</option><option value="Vacuum">Vacuum</option><option value="EMI/EMC">EMI/EMC</option><option value="NDT">NDT</option><option value="Wind Tunnel">Wind Tunnel</option></select></div></div>
+            <div id="Vibration-fields" class="space-y-4"><div><label class="block text-sm font-medium">Mounting Plan & Interface Drawing</label><textarea name="MountingPlan" class="mt-1 w-full border-gray-300 rounded-md" rows="2" placeholder="How will the device be mounted? Do you have a custom fixture?"></textarea><input type="file" class="mt-2 text-sm"></div><div><label class="block text-sm font-medium">External Accelerometers</label><input type="text" name="Accelerometers" class="mt-1 w-full border-gray-300 rounded-md" placeholder="How many are needed and what are their precise locations?"></div><div><label class="block text-sm font-medium">Test Axes</label><input type="text" name="TestAxes" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., X, Y, and Z"></div></div>
+            <div id="Thermal-fields" class="space-y-4"><div><label class="block text-sm font-medium">Test Type</label><select name="ThermalType" class="mt-1 w-full border-gray-300 rounded-md"><option>Operational</option><option>Survival</option></select></div><div><label class="block text-sm font-medium">Number of Cycles</label><input type="number" name="Cycles" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 1 for survival, 8 for operational"></div><div><label class="block text-sm font-medium">Temperature Range (°C)</label><input type="text" name="TempRange" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., -80 to +120"></div><div><label class="block text-sm font-medium">Dwell Time (hours)</label><input type="number" name="DwellTime" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 2"></div><div><label class="block text-sm font-medium">Thermocouples</label><div class="grid grid-cols-2 gap-4"><input type="number" name="TC_Count" class="mt-1 w-full border-gray-300 rounded-md" placeholder="# of spots"><select name="TC_Type" class="mt-1 w-full border-gray-300 rounded-md"><option>Attached</option><option>Free</option></select></div></div><div><label class="block text-sm font-medium">Interface (Power Wires & Data Signals)</label><input type="text" name="Interface" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 28V DC @ 2A, RS-422 for telemetry, # of wire signals"></div><div><label class="block text-sm font-medium">Temperature Tracking</label><select name="TempTracking" class="mt-1 w-full border-gray-300 rounded-md"><option>Automated by facility</option><option>Requires TestBedz observation</option></select></div></div>
+            <div id="Shock-fields" class="space-y-4"><div><label class="block text-sm font-medium">Shock Response Spectrum (SRS)</label><input name="SRS_File" type="file" class="mt-1 w-full text-sm"></div><div><label class="block text-sm font-medium">Number of Shocks per Axis</label><input name="ShockCount" type="number" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 3"></div></div>
+            <div id="Vacuum-fields" class="space-y-4"><div><label class="block text-sm font-medium">Target Pressure (Torr)</label><input name="TargetPressure" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 1x10^-6 Torr"></div><div><label class="block text-sm font-medium">Pump-down Time Requirement (hours)</label><input name="PumpDownTime" type="number" class="mt-1 w-full border-gray-300 rounded-md"></div></div>
+            <div id="EMIEMC-fields" class="space-y-4"><div><label class="block text-sm font-medium">Modes of Operation During Test</label><input name="OperationModes" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., Standby, Full Power Transmit"></div><div><label class="block text-sm font-medium">Power Requirements</label><input name="PowerReqs" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 28V DC, 5A peak"></div><div><label class="block text-sm font-medium">Testing Objective</label><select name="EMI_Objective" class="mt-1 w-full border-gray-300 rounded-md"><option>Radiated Emissions</option><option>Conducted Emissions</option><option>Radiated Immunity</option><option>Conducted Immunity</option><option>ESD Immunity</option></select></div></div>
+            <div id="NDT-fields" class="space-y-4"><div><label class="block text-sm font-medium">Primary Objective</label><input name="NDT_Objective" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., Detect internal voids, check weld integrity"></div><div><label class="block text-sm font-medium">Material(s)</label><input name="Materials" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., Carbon Fiber Composite, Aluminum 6061"></div></div>
+            <div id="WindTunnel-fields" class="space-y-4"><div><label class="block text-sm font-medium">Desired Wind Speed Sweep (mph)</label><input name="WindSpeed" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., 0 to 150"></div><div><label class="block text-sm font-medium">Desired Angle of Attack Sweep (°)</label><input name="AoA" type="text" class="mt-1 w-full border-gray-300 rounded-md" placeholder="e.g., -5 to 20"></div></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- MOCK DATABASE ---
+            const mockFacilities = [
+                { id: 'fac_1', name: 'Aero-Enviro Labs', capabilities: { maxFreq: 2000, minTemp: -80, maxTemp: 120, maxShock: 2000 }, blurb: 'Aero-Enviro Labs specializes in dynamic and thermal testing for CubeSats and small-to-medium components. Their chambers are modern, but weekend scheduling is limited.' },
+                { id: 'fac_2', name: 'Dynamic Test Solutions', capabilities: { maxFreq: 3000, minTemp: -50, maxTemp: 100, maxShock: 5000 }, blurb: 'DTS is a leader in high-G shock and vibration testing for military and aerospace hardware. They offer extensive experience with MIL-STD procedures.' },
+                { id: 'fac_3', name: 'Cryo-Vac Specialists', capabilities: { maxFreq: 1000, minTemp: -150, maxTemp: 150, maxShock: 1000 }, blurb: 'As their name suggests, Cryo-Vac offers extreme temperature ranges perfect for deep space simulations. Their vibe tables are smaller, best for component-level testing.' }
+            ];
+            let mockCampaigns = [{id: 'campaign_0', companyName: 'Example Corp', testPurpose: 'Initial Demo Campaign', testBackground: 'This is a sample campaign to demonstrate the dashboard functionality.', createdAt: new Date(Date.now() - 86400000 * 10), status: 'Complete', tests: [{type: 'Vibration', details: {'Test Axes': 'X, Y, Z', 'Standard': 'GEVS'}}]}];
+
+            // --- DOM ELEMENT SELECTORS ---
+            const publicPage = document.getElementById('public-page');
+            const dashboardPage = document.getElementById('dashboard-page');
+            const views = document.querySelectorAll('.view');
+            const publicNavItems = document.querySelectorAll('.public-nav-item');
+            const publicSections = document.querySelectorAll('.public-section');
+            const getStartedLinks = document.querySelectorAll('a[href="#rfq-form"]');
+
+            const signupForm = document.getElementById('signup-form');
+            const loginForm = document.getElementById('login-form');
+            const newCampaignForm = document.getElementById('new-campaign-form');
+            const addTestForm = document.getElementById('add-test-form');
+            
+            const loginModal = document.getElementById('login-modal');
+            const newCampaignModal = document.getElementById('new-campaign-modal');
+            const addTestModal = document.getElementById('add-test-modal');
+            const messageModal = document.getElementById('message-modal');
+            const facilityIntroModal = document.getElementById('facility-intro-modal');
+            
+            const showLoginBtn = document.getElementById('show-login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const dashboardNavItems = document.querySelectorAll('#dashboard-page .nav-item');
+            const faqContainer = document.getElementById('faq-content');
+            
+            // --- STATE MANAGEMENT ---
+            let currentCampaignId = null;
+
+            // --- UTILITY FUNCTIONS ---
+            function showPage(pageId) { publicPage.classList.toggle('active', pageId === 'public'); dashboardPage.classList.toggle('active', pageId === 'dashboard'); }
+            function showModal(modalElement) { modalElement.classList.remove('hidden'); }
+            function hideModal(modalElement) { modalElement.classList.add('hidden'); }
+            
+            function showPublicSection(sectionId) {
+                publicSections.forEach(s => s.classList.toggle('active', s.id === sectionId));
+                publicNavItems.forEach(item => {
+                    item.classList.toggle('text-blue-600', item.dataset.section === sectionId);
+                    item.classList.toggle('text-gray-600', item.dataset.section !== sectionId);
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            function showDashboardView(viewId) {
+                views.forEach(v => v.classList.toggle('active', v.id === `${viewId}-view`));
+                dashboardNavItems.forEach(item => {
+                    item.classList.toggle('bg-gray-200', item.dataset.view === viewId);
+                });
+            }
+
+            function showMessage(title, text, duration = 0) {
+                document.getElementById('message-title').textContent = title;
+                document.getElementById('message-text').textContent = text;
+                showModal(messageModal);
+                if (duration > 0) {
+                    setTimeout(() => hideModal(messageModal), duration);
+                }
+            }
+
+            // --- CORE LOGIC & EVENT HANDLERS ---
+            function handleLogin(e) {
+                e.preventDefault();
+                showPage('dashboard');
+                showDashboardView('dashboard');
+                loadCampaigns();
+                hideModal(loginModal);
+
+                const newMatchId = sessionStorage.getItem('newlyMatchedFacilityId');
+                if (newMatchId) {
+                    const facility = mockFacilities.find(f => f.id === newMatchId);
+                    document.getElementById('facility-name').textContent = facility.name;
+                    document.getElementById('facility-blurb').textContent = facility.blurb;
+                    showModal(facilityIntroModal);
+                    sessionStorage.removeItem('newlyMatchedFacilityId');
+                }
+            }
+
+            function handleLogout() {
+                currentCampaignId = null;
+                showPage('public');
+                showPublicSection('home-content');
+            }
+
+            function handleInitialSignup(e) {
+                e.preventDefault();
+                const signupFormSteps = document.querySelectorAll('#signup-form .form-step');
+                
+                // New, robust validation
+                for (let i = 0; i < signupFormSteps.length; i++) {
+                    const step = signupFormSteps[i];
+                    const inputs = step.querySelectorAll('input[required], textarea[required], select[required]');
+                    for (const input of inputs) {
+                        if (!input.value.trim()) {
+                            // Deactivate all steps
+                            signupFormSteps.forEach(s => s.classList.remove('active'));
+                            // Activate the step with the error
+                            step.classList.add('active');
+                            currentSignupStep = i + 1; // Update global state
+
+                            // Manage button visibility for the corrected step
+                            document.getElementById('prev-btn').style.display = currentSignupStep > 1 ? 'block' : 'none';
+                            document.getElementById('next-btn').style.display = currentSignupStep < signupFormSteps.length ? 'block' : 'none';
+                            document.getElementById('submit-btn').style.display = currentSignupStep === signupFormSteps.length ? 'block' : 'none';
+                            
+                            showMessage('Incomplete Form', `Please complete all required fields on Step ${currentSignupStep}.`);
+                            input.focus(); // Focus on the problematic input
+                            return; // Stop the submission
+                        }
+                    }
+                }
+
+                // If the loop completes, the form is valid. Proceed with submission.
+                const formData = new FormData(signupForm);
+                const primaryDetails = Object.fromEntries(formData.entries());
+                
+                const matchedFacility = matchFacility(primaryDetails);
+
+                const firstTest = {
+                    type: primaryDetails.PrimaryTestType,
+                    details: {
+                        'Initial Test Type': primaryDetails.PrimaryTestType,
+                        'Initial Frequency Range': primaryDetails.FreqRange,
+                        'Initial Temperature Range': primaryDetails.TempRange,
+                        'Initial Shock Range': primaryDetails.ShockRange,
+                    }
+                };
+
+                const newCampaign = {
+                    id: `campaign_${Date.now()}`,
+                    companyName: primaryDetails.CompanyName,
+                    testPurpose: primaryDetails.TestPurpose,
+                    testBackground: `Initial campaign for ${primaryDetails.PrimaryTestType} testing.`,
+                    createdAt: new Date(),
+                    status: 'Awaiting Facility Response',
+                    tests: [firstTest],
+                    facilityId: matchedFacility.id
+                };
+                mockCampaigns.unshift(newCampaign);
+                
+                sessionStorage.setItem('newlyMatchedFacilityId', matchedFacility.id);
+
+                showMessage('Account Created!', 'You will now be logged in.');
+                setTimeout(() => {
+                    hideModal(messageModal);
+                    handleLogin({ preventDefault: () => {} });
+                }, 1500);
+            }
+            
+            function handleCreateNewCampaign(e) {
+                e.preventDefault();
+                const fd = new FormData(newCampaignForm);
+                const newCampaign = {
+                    id: `campaign_${Date.now()}`,
+                    companyName: mockCampaigns[0]?.companyName || 'New Client',
+                    testPurpose:  fd.get('TestPurpose'),
+                    testBackground: fd.get('TestBackground'),
+                    createdAt:    new Date(),
+                    status:       'New Request',
+                    tests:        []
+                };
+                mockCampaigns.unshift(newCampaign);
+                loadCampaigns();
+                hideModal(newCampaignModal);
+            }
+
+            function handleAddTest(e) {
+                e.preventDefault();
+                if (!currentCampaignId) return;
+                const campaign = mockCampaigns.find(c => c.id === currentCampaignId);
+                if (!campaign) return;
+                
+                const formData = new FormData(addTestForm);
+                const testType = formData.get('TestType');
+                if (!testType) {
+                    showMessage('Error', 'Please select a test type.');
+                    return;
+                }
+                
+                const details = Object.fromEntries(formData.entries());
+                
+                campaign.tests.push({ type: testType, details: details });
+                campaign.status = "Facility Matching";
+                
+                renderTestsForCampaign(campaign.id);
+                hideModal(addTestModal);
+                showMessage('Test Added', `A new ${testType} test has been added to your campaign.`);
+                
+                const statusBadge = document.getElementById('detail-campaign-status');
+                statusBadge.textContent = campaign.status;
+                statusBadge.className = `status-badge status-${campaign.status.toLowerCase().replace(/ /g, '')}`;
+                loadCampaigns();
+            }
+
+            // --- DYNAMIC RENDERING ---
+            function loadCampaigns() {
+                const container = document.getElementById('campaign-tickets-container');
+                container.innerHTML = `<table class="w-full text-left"><thead><tr class="border-b"><th class="p-4 font-semibold">Campaign Purpose</th><th class="p-4 font-semibold">Company</th><th class="p-4 font-semibold">Status</th><th class="p-4 font-semibold">Created</th></tr></thead><tbody></tbody></table>`;
+                const tbody = container.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                if (mockCampaigns.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 p-6">You haven't created any test campaigns yet.</td></tr>`;
+                    return;
+                }
+
+                mockCampaigns.forEach(campaign => {
+                    const row = tbody.insertRow();
+                    row.className = 'border-b hover:bg-gray-50 cursor-pointer';
+                    row.dataset.id = campaign.id;
+                    row.innerHTML = `
+                        <td class="p-4 font-semibold text-blue-600">${campaign.testPurpose}</td>
+                        <td class="p-4 text-gray-600">${campaign.companyName}</td>
+                        <td class="p-4"><span class="status-badge status-${campaign.status.toLowerCase().replace(/ /g, '')}">${campaign.status}</span></td>
+                        <td class="p-4 text-gray-600">${campaign.createdAt.toLocaleDateString()}</td>`;
+                    row.addEventListener('click', () => showCampaignDetail(campaign.id));
+                });
+            }
+
+            function showCampaignDetail(campaignId) {
+                currentCampaignId = campaignId;
+                const campaign = mockCampaigns.find(c => c.id === campaignId);
+                if (!campaign) return;
+                
+                document.getElementById('detail-campaign-purpose').textContent = campaign.testPurpose;
+                document.getElementById('detail-campaign-background').textContent = campaign.testBackground || '';
+                const statusBadge = document.getElementById('detail-campaign-status');
+                statusBadge.textContent = campaign.status;
+                statusBadge.className = `status-badge status-${campaign.status.toLowerCase().replace(/ /g, '')}`;
+                
+                renderTestsForCampaign(campaignId);
+                showDashboardView('campaign-detail');
+            }
+
+            function renderTestsForCampaign(campaignId) {
+                const campaign = mockCampaigns.find(c => c.id === campaignId);
+                const container = document.getElementById('tests-container');
+                container.innerHTML = '';
+                if (!campaign || !campaign.tests || campaign.tests.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500">No specific tests have been added to this campaign yet.</p>`;
+                    return;
+                }
+                campaign.tests.forEach(test => {
+                    const testEl = document.createElement('div');
+                    testEl.className = 'p-4 border rounded-lg bg-gray-50';
+                    let detailsHtml = Object.entries(test.details).map(([key, value]) => {
+                        if (!value) return '';
+                        const formattedKey = key.replace(/([A-Z])/g, ' $1').trim();
+                        return `<p class="text-sm text-gray-600"><strong class="text-gray-800">${formattedKey}:</strong> ${value}</p>`;
+                    }).join('');
+                    testEl.innerHTML = `<h4 class="font-semibold text-lg">${test.type}</h4><div class="mt-2 space-y-1">${detailsHtml}</div>`;
+                    container.appendChild(testEl);
+                });
+            }
+
+            function setupAddTestForm() {
+                addTestForm.reset();
+                const addTestFormStepsContainer = document.getElementById('add-test-form-steps');
+                addTestFormStepsContainer.innerHTML = '';
+                
+                const standardsStep = document.getElementById('standards-step').cloneNode(true);
+                addTestFormStepsContainer.appendChild(standardsStep);
+
+                const testTypeSelector = addTestFormStepsContainer.querySelector('select[name="TestType"]');
+                testTypeSelector.addEventListener('change', (e) => {
+                    const oldFields = addTestFormStepsContainer.querySelector('.specific-fields-container');
+                    if(oldFields) oldFields.remove();
+
+                    const testType = e.target.value;
+                    const templateId = `${testType.replace(/\s|\//g, '')}-fields`;
+                    const template = document.getElementById(templateId);
+
+                    if (template) {
+                        const newFieldsContainer = document.createElement('div');
+                        newFieldsContainer.className = 'specific-fields-container space-y-4 pt-6 mt-6 border-t';
+                        const newFields = template.cloneNode(true);
+                        newFieldsContainer.appendChild(newFields);
+                        addTestFormStepsContainer.appendChild(newFieldsContainer);
+                    }
+                });
+                showModal(addTestModal);
+            }
+
+            // --- SIGNUP FORM & OTHER UI LOGIC ---
+            const signupFormSteps = document.querySelectorAll('#signup-form .form-step');
+            let currentSignupStep = 1;
+            document.getElementById('next-btn').addEventListener('click', () => {
+                const currentFormStep = signupFormSteps[currentSignupStep - 1];
+                const inputs = currentFormStep.querySelectorAll('input[required], textarea[required], select[required]');
+                let isValid = true;
+                for (const input of inputs) { if (!input.value.trim()) { isValid = false; input.focus(); break; } }
+                
+                if (isValid && currentSignupStep < signupFormSteps.length) {
+                    signupFormSteps[currentSignupStep - 1].classList.remove('active');
+                    currentSignupStep++;
+                    signupFormSteps[currentSignupStep - 1].classList.add('active');
+                    document.getElementById('prev-btn').style.display = 'block';
+                    if (currentSignupStep === signupFormSteps.length) {
+                        document.getElementById('next-btn').style.display = 'none';
+                        document.getElementById('submit-btn').style.display = 'block';
+                    }
+                } else if (!isValid) { 
+                    showMessage('Incomplete Information', 'Please fill out all required fields in this step.'); 
+                }
+            });
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                if (currentSignupStep > 1) {
+                    signupFormSteps[currentSignupStep - 1].classList.remove('active');
+                    currentSignupStep--;
+                    signupFormSteps[currentSignupStep - 1].classList.add('active');
+                    document.getElementById('submit-btn').style.display = 'none';
+                    document.getElementById('next-btn').style.display = 'block';
+                    if (currentSignupStep === 1) { document.getElementById('prev-btn').style.display = 'none'; }
+                }
+            });
+
+            document.getElementById('initial-test-type').addEventListener('change', (e) => {
+                document.querySelectorAll('.conditional-field').forEach(f => f.classList.remove('active'));
+                const selectedType = e.target.value;
+                const fieldToShow = document.getElementById(`${selectedType}-params`);
+                if (fieldToShow) {
+                    fieldToShow.classList.add('active');
+                }
+            });
+
+            // --- EVENT LISTENER BINDING ---
+            publicNavItems.forEach(item => item.addEventListener('click', (e) => { e.preventDefault(); showPublicSection(e.currentTarget.dataset.section); }));
+            getStartedLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPublicSection('home-content');
+                    setTimeout(() => document.getElementById('rfq-form').scrollIntoView({ behavior: 'smooth' }), 100);
+                });
+            });
+            dashboardNavItems.forEach(item => item.addEventListener('click', (e) => { e.preventDefault(); showDashboardView(e.currentTarget.dataset.view); }));
+            
+            if (faqContainer) {
+                faqContainer.addEventListener('click', (e) => {
+                    const questionHeader = e.target.closest('.faq-question');
+                    if (!questionHeader) return;
+                    const answer = questionHeader.nextElementSibling;
+                    const icon = questionHeader.querySelector('.faq-icon');
+                    const isOpening = !answer.classList.contains('open');
+                    faqContainer.querySelectorAll('.faq-answer.open').forEach(openAnswer => {
+                        if (openAnswer !== answer) {
+                            openAnswer.classList.remove('open');
+                            openAnswer.previousElementSibling.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                        }
+                    });
+                    answer.classList.toggle('open');
+                    icon.style.transform = isOpening ? 'rotate(45deg)' : 'rotate(0deg)';
+                });
+            }
+            
+            showLoginBtn.addEventListener('click', () => showModal(loginModal));
+            document.getElementById('close-login-modal-btn').addEventListener('click', () => hideModal(loginModal));
+            logoutBtn.addEventListener('click', handleLogout);
+            document.getElementById('show-new-campaign-modal-btn').addEventListener('click', () => showModal(newCampaignModal));
+            document.getElementById('close-new-campaign-modal-btn').addEventListener('click', () => hideModal(newCampaignModal));
+            document.getElementById('show-add-test-modal-btn').addEventListener('click', setupAddTestForm);
+            document.getElementById('close-add-test-modal-btn').addEventListener('click', () => hideModal(addTestModal));
+            document.getElementById('back-to-dashboard-btn').addEventListener('click', () => showDashboardView('dashboard'));
+            document.getElementById('close-message-btn').addEventListener('click', () => hideModal(messageModal));
+            document.getElementById('proceed-to-dashboard-btn').addEventListener('click', () => hideModal(facilityIntroModal));
+
+            loginForm.addEventListener('submit', handleLogin);
+            signupForm.addEventListener('submit', handleInitialSignup);
+            newCampaignForm.addEventListener('submit', handleCreateNewCampaign);
+            addTestForm.addEventListener('submit', handleAddTest);
+
+            showPage('public');
+            showPublicSection('home-content');
+        });
+    </script>
+</body>
+</html>
