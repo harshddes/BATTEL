@@ -1,0 +1,10 @@
+{
+  "name": "browser-tools",
+  "type": "command",
+  "command": "npx @agentdeskai/browser-tools-mcp@latest",
+  "args": [],
+  "env": {
+    "BROWSERTOOLS_DEBUG": "true",
+    "BROWSERTOOLS_CONFIG_PATH": "./v2/.browsertools/config.json"
+  }
+}

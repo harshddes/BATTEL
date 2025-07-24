@@ -1,0 +1,32 @@
+================================================
+  🎉 BATTEL BrowserTools Setup Complete!
+================================================
+
+QUICK START:
+1. Run: ./start-dev-server.sh
+2. Install Chrome Extension:
+   https://browsertools.agentdesk.ai/installation
+3. Configure Cursor MCP:
+   Copy content from cursor-mcp-config.json
+4. Open DevTools → BrowserTools tab
+
+ADVANCED FEATURES:
+• Auto-screenshots in ./screenshots/
+• Performance monitoring enabled
+• Debug logging in ./logs/
+• Hot-reload development server
+
+DEBUGGING:
+• Run: ./debug-info.sh for system info
+• Run: ./test-performance.sh for speed tests
+
+URLS:
+• Website: http://localhost:8080
+• BrowserTools: http://localhost:3025
+
+CURSOR MCP SETUP:
+1. Cursor → Settings → MCP Servers
+2. Add new server with config from cursor-mcp-config.json
+3. Restart Cursor
+4. Test: Ask AI "take a screenshot"
+================================================

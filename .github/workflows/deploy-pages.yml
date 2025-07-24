@@ -1,0 +1,389 @@
+name: 🚀 Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'v2/**'
+      - '.github/workflows/deploy-pages.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'v2/**'
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  SOURCE_DIR: "./v2"
+  NODE_VERSION: "18"
+
+jobs:
+  # ================================
+  # BUILD & OPTIMIZE WEBSITE
+  # ================================
+  build:
+    name: 🏗️ Build Website
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: 📦 Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: 🎯 Optimize Images
+      run: |
+        echo "🖼️ Optimizing images..."
+        # Install image optimization tools
+        sudo apt-get update
+        sudo apt-get install -y imagemagick optipng jpegoptim
+        
+        # Optimize PNG files
+        find ${{ env.SOURCE_DIR }} -name "*.png" -exec optipng -o2 {} \;
+        
+        # Optimize JPEG files
+        find ${{ env.SOURCE_DIR }} -name "*.jpg" -o -name "*.jpeg" -exec jpegoptim --max=85 {} \;
+        
+        echo "✅ Image optimization completed"
+
+    - name: 🚀 Minify CSS & JS
+      run: |
+        echo "📦 Minifying assets..."
+        
+        # Install minification tools
+        npm install -g clean-css-cli uglify-js html-minifier-terser
+        
+        # Minify CSS files
+        find ${{ env.SOURCE_DIR }} -name "*.css" ! -name "*.min.css" | while read file; do
+          echo "Minifying CSS: $file"
+          cleancss -o "${file%.css}.min.css" "$file"
+          # Keep original and create .min version for flexibility
+        done
+        
+        # Minify JavaScript files
+        find ${{ env.SOURCE_DIR }} -name "*.js" ! -name "*.min.js" | while read file; do
+          echo "Minifying JS: $file"
+          uglifyjs "$file" -o "${file%.js}.min.js" -c -m
+        done
+        
+        # Minify HTML files
+        find ${{ env.SOURCE_DIR }} -name "*.html" | while read file; do
+          echo "Minifying HTML: $file"
+          html-minifier-terser \
+            --collapse-whitespace \
+            --remove-comments \
+            --remove-optional-tags \
+            --remove-redundant-attributes \
+            --remove-script-type-attributes \
+            --use-short-doctype \
+            --minify-css true \
+            --minify-js true \
+            --input "$file" \
+            --output "$file.tmp"
+          mv "$file.tmp" "$file"
+        done
+        
+        echo "✅ Asset minification completed"
+
+    - name: 🔧 Generate Optimized Build
+      run: |
+        echo "🏗️ Creating optimized build..."
+        
+        # Create build directory
+        mkdir -p _site
+        
+        # Copy source files
+        cp -r ${{ env.SOURCE_DIR }}/* _site/
+        
+        # Create optimized index.html that uses minified assets
+        cat > _site/index-optimized.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="BATTEL - Advanced Web Platform">
+            <meta name="author" content="BATTEL Team">
+            
+            <!-- Performance optimizations -->
+            <link rel="preload" href="./public/css/main.min.css" as="style">
+            <link rel="preload" href="./public/js/main.min.js" as="script">
+            <link rel="dns-prefetch" href="//fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            
+            <!-- Stylesheets -->
+            <link rel="stylesheet" href="./public/css/main.min.css">
+            <link rel="stylesheet" href="./public/css/components.min.css">
+            
+            <title>BATTEL - Advanced Web Platform</title>
+        </head>
+        <body>
+            <!-- Header Section -->
+            <header class="header">
+                <nav class="nav">
+                    <div class="nav-brand">
+                        <h1>BATTEL</h1>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#home" class="nav-link">Home</a></li>
+                        <li><a href="#features" class="nav-link">Features</a></li>
+                        <li><a href="#about" class="nav-link">About</a></li>
+                        <li><a href="#contact" class="nav-link">Contact</a></li>
+                    </ul>
+                    <div class="nav-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main">
+                <!-- Hero Section -->
+                <section id="home" class="hero">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Welcome to BATTEL</h1>
+                        <p class="hero-subtitle">Advanced Web Platform for Modern Solutions</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary">Get Started</button>
+                            <button class="btn btn-secondary">Learn More</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features Section -->
+                <section id="features" class="features">
+                    <div class="container">
+                        <h2 class="section-title">Features</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">⚡</div>
+                                <h3>High Performance</h3>
+                                <p>Optimized for speed and efficiency</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🔒</div>
+                                <h3>Secure</h3>
+                                <p>Built with security best practices</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎨</div>
+                                <h3>Modern Design</h3>
+                                <p>Clean and intuitive user interface</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Section -->
+                <section id="about" class="about">
+                    <div class="container">
+                        <h2 class="section-title">About BATTEL</h2>
+                        <p class="about-text">
+                            BATTEL is a cutting-edge web platform designed to deliver 
+                            exceptional user experiences with modern web technologies.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Contact Section -->
+                <section id="contact" class="contact">
+                    <div class="container">
+                        <h2 class="section-title">Contact Us</h2>
+                        <form class="contact-form">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <p>&copy; 2025 BATTEL. All rights reserved.</p>
+                </div>
+            </footer>
+
+            <!-- Optimized Scripts -->
+            <script src="./public/js/main.min.js"></script>
+            <script src="./public/js/components.min.js"></script>
+        </body>
+        </html>
+        EOF
+        
+        # Replace main index.html with optimized version for production
+        mv _site/index-optimized.html _site/index.html
+        
+        # Generate sitemap.xml
+        cat > _site/sitemap.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          <url>
+            <loc>https://harshddes.github.io/BATTEL/</loc>
+            <lastmod>$(date -u +%Y-%m-%d)</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>1.0</priority>
+          </url>
+        </urlset>
+        EOF
+        
+        # Generate robots.txt
+        cat > _site/robots.txt << 'EOF'
+        User-agent: *
+        Allow: /
+        
+        Sitemap: https://harshddes.github.io/BATTEL/sitemap.xml
+        EOF
+        
+        # Generate .nojekyll to bypass Jekyll processing
+        touch _site/.nojekyll
+        
+        echo "✅ Optimized build created"
+
+    - name: 📊 Generate Performance Report
+      run: |
+        echo "📊 Generating performance report..."
+        
+        # Calculate file sizes
+        echo "=== Build Performance Report ===" > performance-report.txt
+        echo "Generated: $(date)" >> performance-report.txt
+        echo "" >> performance-report.txt
+        
+        echo "📁 Directory Sizes:" >> performance-report.txt
+        du -sh _site >> performance-report.txt
+        echo "" >> performance-report.txt
+        
+        echo "📄 File Counts:" >> performance-report.txt
+        echo "HTML files: $(find _site -name "*.html" | wc -l)" >> performance-report.txt
+        echo "CSS files: $(find _site -name "*.css" | wc -l)" >> performance-report.txt
+        echo "JS files: $(find _site -name "*.js" | wc -l)" >> performance-report.txt
+        echo "Image files: $(find _site -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" | wc -l)" >> performance-report.txt
+        echo "" >> performance-report.txt
+        
+        echo "⚡ Largest Files:" >> performance-report.txt
+        find _site -type f -exec ls -lh {} \; | sort -k5 -hr | head -10 >> performance-report.txt
+        
+        # Display report
+        cat performance-report.txt
+        
+        # Save as artifact
+        mv performance-report.txt _site/
+
+    - name: 📤 Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './_site'
+
+  # ================================
+  # DEPLOY TO GITHUB PAGES
+  # ================================
+  deploy:
+    name: 🌐 Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 🚀 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+    - name: 🔗 Display Deployment Info
+      run: |
+        echo "🎉 Deployment successful!"
+        echo "🌐 Website URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "📊 Performance Report: ${{ steps.deployment.outputs.page_url }}performance-report.txt"
+
+  # ================================
+  # POST-DEPLOYMENT CHECKS
+  # ================================
+  verify:
+    name: ✅ Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 🏥 Health Check
+      run: |
+        echo "🔍 Performing health checks..."
+        
+        SITE_URL="${{ needs.deploy.outputs.page_url }}"
+        
+        # Wait for deployment to be fully available
+        sleep 30
+        
+        # Check if site is accessible
+        STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$SITE_URL" || echo "000")
+        
+        if [ "$STATUS" = "200" ]; then
+          echo "✅ Site is accessible (HTTP $STATUS)"
+        else
+          echo "❌ Site check failed (HTTP $STATUS)"
+          exit 1
+        fi
+        
+        # Check if main resources load
+        curl -s -o /dev/null -f "$SITE_URL/public/css/main.min.css" && echo "✅ CSS loads successfully" || echo "⚠️ CSS load failed"
+        curl -s -o /dev/null -f "$SITE_URL/public/js/main.min.js" && echo "✅ JS loads successfully" || echo "⚠️ JS load failed"
+        
+        echo "🎉 Deployment verification completed!"
+
+    - name: 📈 Performance Audit
+      run: |
+        echo "📈 Running basic performance audit..."
+        
+        SITE_URL="${{ needs.deploy.outputs.page_url }}"
+        
+        # Measure page load time
+        LOAD_TIME=$(curl -s -o /dev/null -w "%{time_total}" "$SITE_URL")
+        echo "⏱️ Page load time: ${LOAD_TIME}s"
+        
+        # Check page size
+        PAGE_SIZE=$(curl -s "$SITE_URL" | wc -c)
+        echo "📏 Page size: ${PAGE_SIZE} bytes"
+        
+        # Performance thresholds
+        if (( $(echo "$LOAD_TIME < 2.0" | bc -l) )); then
+          echo "✅ Load time within acceptable range (<2s)"
+        else
+          echo "⚠️ Load time exceeds 2 seconds"
+        fi
+        
+        if [ "$PAGE_SIZE" -lt 500000 ]; then
+          echo "✅ Page size acceptable (<500KB)"
+        else
+          echo "⚠️ Page size is large (>500KB)"
+        fi 

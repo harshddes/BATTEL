@@ -1,0 +1,216 @@
+# 🌐 Website Development Rules - BATTEL v2
+
+## 🎯 **Core Development Principles**
+
+### **Project Structure**
+- **v2/** - Main website directory (production-ready)
+- **testbedzv2/** - Testing environment (ignore for now)
+- **v1/** - Legacy backend (completely ignore)
+- **Focus entirely on v2/ directory for all website development**
+
+### **BrowserTools Integration**
+- **ALWAYS** use BrowserTools for visual debugging and testing
+- **MANDATORY** screenshot verification after major changes
+- **Performance monitoring** enabled for all development
+- **Real-time error capture** and console monitoring
+
+## 🏗️ **File Structure Standards**
+
+### **Directory Organization**
+```
+v2/
+├── index.html                 # Main entry point
+├── public/
+│   ├── css/
+│   │   ├── main.css          # Core styles
+│   │   └── components.css    # Component library
+│   ├── js/
+│   │   ├── main.js           # Main application logic
+│   │   └── components.js     # Interactive components
+│   └── images/               # Optimized assets
+├── .browsertools/            # BrowserTools configuration
+└── screenshots/              # Auto-generated screenshots
+```
+
+### **Naming Conventions**
+- **CSS**: `kebab-case.css` (main.css, components.css)
+- **JavaScript**: `camelCase.js` (main.js, components.js)
+- **Images**: `descriptive-name.ext` (hero-banner.jpg)
+- **Components**: `PascalCase` classes (BattelApp, Modal)
+
+## 💻 **Development Workflow**
+
+### **Before Any Code Changes**
+1. **Start development environment**: Run `v2/setup-browsertools.bat`
+2. **Open BrowserTools**: Chrome DevTools → BrowserTools tab
+3. **Take baseline screenshot**: Document current state
+4. **Enable performance monitoring**: Verify metrics are tracking
+
+### **During Development**
+1. **Hot-reload enabled**: Changes reflect immediately in browser
+2. **Console monitoring**: Watch for errors in BrowserTools
+3. **Performance tracking**: Monitor Core Web Vitals continuously
+4. **Screenshot on major changes**: Visual regression prevention
+
+### **After Code Changes**
+1. **Visual verification**: Take comparison screenshots
+2. **Performance check**: Ensure no regressions
+3. **Error validation**: Confirm no new console errors
+4. **Cross-device testing**: Mobile/desktop compatibility
+
+## 🔧 **BrowserTools Commands**
+
+### **Essential Commands for AI**
+- `"Take a screenshot"` - Capture current state
+- `"Check console errors"` - Review error logs
+- `"Monitor performance"` - Get Core Web Vitals
+- `"Test mobile view"` - Switch to mobile viewport
+- `"Highlight element [selector]"` - Focus on specific elements
+
+### **Development Helpers**
+- `debugApp.state()` - View application state
+- `debugApp.performance()` - Get performance metrics
+- `debugApp.screenshot()` - Programmatic screenshots
+- `window.performanceMetrics` - Real-time performance data
+
+## 🎨 **CSS Development Standards**
+
+### **CSS Custom Properties Usage**
+- **MANDATORY**: Use CSS custom properties for all colors, spacing, typography
+- **Example**: `color: var(--primary-color)` not `color: #3B82F6`
+- **Performance**: Leverage CSS variables for theme switching
+
+### **Component-Based Styling**
+- **Modular CSS**: Each component gets its own section
+- **BEM methodology**: Block__Element--Modifier naming
+- **Responsive design**: Mobile-first approach with proper breakpoints
+
+### **Animation & Transitions**
+- **Respect motion preferences**: `@media (prefers-reduced-motion: reduce)`
+- **Performance-optimized**: Use `transform` and `opacity` for animations
+- **Consistent timing**: Use CSS custom properties for transition durations
+
+## 🚀 **JavaScript Development Standards**
+
+### **Modern JavaScript Features**
+- **ES6+ syntax**: Classes, arrow functions, destructuring, async/await
+- **Performance optimization**: Event delegation, throttling, debouncing
+- **Error handling**: Comprehensive try-catch blocks with proper logging
+
+### **BrowserTools Integration**
+- **Debug mode detection**: `location.hostname === 'localhost'`
+- **Enhanced logging**: Structured console output for BrowserTools
+- **Performance monitoring**: Built-in Core Web Vitals tracking
+- **Error reporting**: Automatic error capture and reporting
+
+### **Component Architecture**
+- **Class-based components**: Consistent instantiation pattern
+- **Event-driven architecture**: Custom events for component communication
+- **Accessibility first**: ARIA attributes and keyboard navigation
+- **Progressive enhancement**: Core functionality without JavaScript
+
+## 📱 **Responsive Design Requirements**
+
+### **Breakpoint System**
+- **Mobile**: 320px - 768px (primary focus)
+- **Tablet**: 768px - 1024px
+- **Desktop**: 1024px+ (enhancement)
+
+### **Performance Targets**
+- **Mobile page load**: < 3 seconds on 3G
+- **Desktop page load**: < 2 seconds
+- **Core Web Vitals**: All metrics in "Good" range
+- **Accessibility**: WCAG 2.1 AA compliance
+
+## 🔍 **Testing & Quality Assurance**
+
+### **BrowserTools Testing Protocol**
+1. **Visual regression**: Before/after screenshots comparison
+2. **Performance regression**: Baseline vs current metrics
+3. **Error monitoring**: Console error tracking
+4. **Accessibility testing**: Screen reader and keyboard navigation
+5. **Cross-browser verification**: Chrome, Firefox, Safari, Edge
+
+### **Manual Testing Checklist**
+- [ ] Homepage loads without errors
+- [ ] Navigation works on all devices
+- [ ] Contact form submits successfully
+- [ ] All animations play smoothly
+- [ ] Images load with proper optimization
+- [ ] Performance metrics meet targets
+
+## 🌐 **GitHub Pages Deployment**
+
+### **Automatic Deployment**
+- **Trigger**: Push to `main` branch with v2/ changes
+- **Optimization**: Automatic minification and image compression
+- **Monitoring**: Post-deployment health checks and performance audits
+- **URL**: https://harshddes.github.io/BATTEL/
+
+### **Production Optimizations**
+- **CSS/JS minification**: Automatic in GitHub Actions
+- **Image optimization**: PNG/JPEG compression
+- **SEO optimization**: Sitemap.xml and robots.txt generation
+- **Performance monitoring**: Lighthouse CI integration
+
+## 🛠️ **Development Tools**
+
+### **Required Tools**
+- **Chrome Browser**: Primary development browser
+- **BrowserTools Extension**: Visual debugging and monitoring
+- **Cursor IDE**: Primary development environment
+- **Python HTTP Server**: Local development server (`python -m http.server`)
+
+### **Optional Enhancements**
+- **Chrome DevTools**: Advanced debugging and performance profiling
+- **Lighthouse**: Performance and accessibility auditing
+- **Git**: Version control and deployment
+
+## 🚨 **Critical Don'ts**
+
+### **NEVER:**
+- **Work in v1 directory**: Completely ignore legacy code
+- **Skip BrowserTools**: Always use for visual verification
+- **Commit without testing**: Verify changes in development environment
+- **Use hardcoded values**: Leverage CSS custom properties
+- **Ignore accessibility**: Ensure keyboard navigation and screen reader support
+- **Skip performance checks**: Monitor Core Web Vitals continuously
+
+### **ALWAYS:**
+- **Test in multiple browsers**: Chrome, Firefox, Safari, Edge
+- **Verify mobile responsiveness**: Use device simulation
+- **Check console for errors**: Zero-tolerance for JavaScript errors
+- **Optimize images**: Compress before committing
+- **Use semantic HTML**: Proper element hierarchy and meaning
+
+## 📊 **Performance Monitoring**
+
+### **Core Web Vitals Targets**
+- **LCP (Largest Contentful Paint)**: < 2.5 seconds
+- **FID (First Input Delay)**: < 100 milliseconds
+- **CLS (Cumulative Layout Shift)**: < 0.1
+- **TTFB (Time to First Byte)**: < 600 milliseconds
+
+### **Monitoring Tools**
+- **BrowserTools**: Real-time performance tracking
+- **Chrome DevTools**: Detailed performance profiling
+- **Lighthouse**: Comprehensive auditing
+- **GitHub Actions**: Automated performance checks
+
+## 🎯 **Success Metrics**
+
+### **Development Efficiency**
+- **Setup time**: < 5 minutes to development environment
+- **Iteration speed**: Changes visible within seconds
+- **Error detection**: Immediate feedback via BrowserTools
+- **Deployment time**: < 3 minutes from commit to live
+
+### **Website Performance**
+- **Mobile performance**: 90+ Lighthouse score
+- **Desktop performance**: 95+ Lighthouse score
+- **Accessibility**: 100% WCAG 2.1 AA compliance
+- **SEO**: 95+ Lighthouse SEO score
+
+---
+
+**🎉 Follow these rules for professional, efficient, and high-performance website development with seamless BrowserTools integration!**

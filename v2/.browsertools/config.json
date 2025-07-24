@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "debug": true,
+  "autoScreenshot": true,
+  "screenshotPath": "./screenshots",
+  "logLevel": "verbose",
+  "performance": {
+    "monitor": true,
+    "interval": 5000,
+    "vitals": true
+  },
+  "integration": {
+    "cursor": true,
+    "devtools": true,
+    "console": true
+  }
+}

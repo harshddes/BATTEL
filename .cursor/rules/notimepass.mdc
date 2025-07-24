@@ -1,0 +1,568 @@
+---
+alwaysApply: true
+---
+
+
+# Senior Developer Standards - Zero Tolerance for Inefficiency
+
+## Core Philosophy
+- EXTREME EFFICIENCY: Every line of code must serve a purpose
+- ZERO REDUNDANCY: No duplicate logic, no unnecessary abstractions
+- SENIOR-LEVEL EXECUTION: Code like someone with 10+ years experience
+- NO FLUFF: No redundant print statements, unnecessary comments, or verbose logging
+
+## Project Structure & Architecture
+
+### Directory Organization
+```
+project/
+├── src/
+│   ├── core/           # Core business logic (pure functions)
+│   ├── infrastructure/ # External integrations, databases, APIs
+│   ├── interfaces/     # Controllers, CLI, web handlers
+│   ├── shared/         # Utilities, types, constants
+│   └── tests/          # Mirror src structure
+├── docs/              # Architecture decisions, API specs
+├── scripts/           # Build, deployment, maintenance
+└── config/            # Environment-specific configurations
+```
+
+### File Naming Conventions
+- **Services**: `user.service.ts`, `payment.service.ts`
+- **Types**: `user.types.ts`, `api.types.ts`
+- **Utilities**: `date.utils.ts`, `validation.utils.ts`
+- **Constants**: `app.constants.ts`, `api.constants.ts`
+- **Tests**: `user.service.test.ts`, `utils.test.ts`
+
+## Code Standards
+
+### Functional Programming First
+- Pure functions with explicit inputs/outputs
+- No side effects unless absolutely necessary
+- Immutable data structures by default
+- Higher-order functions over repetitive code patterns
+
+### Error Handling (Zero Tolerance)
+```typescript
+// GOOD: Explicit error handling
+function processUser(id: string): Result<User, ProcessingError> {
+  if (!isValidId(id)) {
+    return failure(new ValidationError('Invalid user ID format'));
+  }
+  // Processing logic
+}
+
+// BAD: Silent failures or generic errors
+function processUser(id: string): User | null {
+  try {
+    // logic that might fail silently
+  } catch (e) {
+    return null; // Information loss
+  }
+}
+```
+
+### Type Safety (Mandatory)
+- Strict TypeScript configuration
+- No `any` types except for truly dynamic content
+- Interface over type aliases for objects
+- Discriminated unions for complex state management
+- Generic constraints for reusable functions
+
+### Architecture Patterns
+
+#### Clean Architecture Layers
+1. **Domain Layer**: Business rules (no dependencies)
+2. **Application Layer**: Use cases, orchestration
+3. **Infrastructure Layer**: External concerns (DB, APIs)
+4. **Interface Layer**: Controllers, CLI, web handlers
+
+#### Dependency Injection
+```typescript
+// Interface in domain layer
+interface UserRepository {
+  findById(id: string): Promise<User | null>;
+}
+
+// Implementation in infrastructure layer
+class DatabaseUserRepository implements UserRepository {
+  constructor(private db: Database) {}
+  // Implementation
+}
+
+// Usage in application layer (dependency injected)
+class UserService {
+  constructor(private userRepo: UserRepository) {}
+}
+```
+
+## Development Workflow
+
+### Pre-Code Planning (MANDATORY)
+1. **Problem Analysis**: Understand root cause, not symptoms
+2. **Pseudocode**: Write algorithmic steps before implementation
+3. **Interface Design**: Define types and contracts first
+4. **Test Cases**: Consider edge cases and failure modes
+5. **Performance Considerations**: Identify potential bottlenecks
+
+### Code Implementation Flow
+1. **Write Types First**: Define data structures and interfaces
+2. **Implement Core Logic**: Pure functions, business rules
+3. **Add Infrastructure**: Database, API integrations
+4. **Create Interfaces**: Controllers, CLI commands
+5. **Write Tests**: Unit, integration, end-to-end
+6. **Optimize**: Profile and improve performance bottlenecks
+
+### Testing Strategy
+```typescript
+// Test structure follows AAA pattern
+describe('UserService', () => {
+  it('should create user with valid data', async () => {
+    // Arrange
+    const userData = createValidUserData();
+    const mockRepo = createMockUserRepository();
+    const service = new UserService(mockRepo);
+
+    // Act
+    const result = await service.createUser(userData);
+
+    // Assert
+    expect(result.isSuccess).toBe(true);
+    expect(mockRepo.save).toHaveBeenCalledWith(userData);
+  });
+});
+```
+
+## Performance & Optimization
+
+### Database Operations
+- Use connection pooling
+- Implement query optimization
+- Add proper indexing strategies
+- Use transactions for data consistency
+- Implement caching layers (Redis, in-memory)
+
+### API Design
+- RESTful resource design
+- Proper HTTP status codes
+- Request/response validation
+- Rate limiting implementation
+- Comprehensive error responses
+
+### Memory Management
+- Avoid memory leaks in event listeners
+- Implement proper cleanup in long-running processes
+- Use weak references for caches
+- Profile memory usage in production
+
+## Security Considerations
+
+### Input Validation
+- Validate all external inputs
+- Sanitize data before database operations
+- Use parameterized queries (prevent SQL injection)
+- Implement rate limiting on public endpoints
+
+### Authentication & Authorization
+- JWT with proper expiration
+- Role-based access control (RBAC)
+- Secure session management
+- Input sanitization for XSS prevention
+
+## Git & Version Control
+
+### Commit Standards
+```
+type(scope): subject
+
+body (optional)
+
+footer (optional)
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Branch Strategy
+- `main`: Production-ready code
+- `develop`: Integration branch
+- `feature/TICKET-123-description`: Feature development
+- `hotfix/TICKET-456-description`: Production fixes
+
+### Code Review Checklist
+- [ ] Code follows architecture patterns
+- [ ] Tests cover critical paths
+- [ ] No performance regressions
+- [ ] Security considerations addressed
+- [ ] Documentation updated
+- [ ] No debugging code left behind
+
+## Documentation Standards
+
+### Code Documentation
+- Document WHY, not WHAT
+- Include examples for complex functions
+- Document API contracts with OpenAPI
+- Maintain architecture decision records (ADRs)
+
+### README Structure
+```markdown
+# Project Name
+Brief description
+
+## Quick Start
+Installation and basic usage
+
+## Architecture
+High-level system design
+
+## Development
+Setup, testing, deployment
+
+## Contributing
+Guidelines for contributors
+```
+
+## Deployment & DevOps
+
+### CI/CD Pipeline
+1. **Code Quality**: Linting, type checking
+2. **Testing**: Unit, integration, e2e tests
+3. **Security**: Dependency scanning, SAST
+4. **Build**: Compilation, bundling
+5. **Deploy**: Staging → Production
+
+### Environment Management
+- Use environment variables for configuration
+- Implement proper secret management
+- Container-based deployments (Docker)
+- Infrastructure as Code (Terraform, CloudFormation)
+
+## Monitoring & Observability
+
+### Logging Strategy
+```typescript
+// Structured logging with context
+logger.info('User created', {
+  userId: user.id,
+  email: user.email,
+  timestamp: new Date().toISOString(),
+  correlationId: req.correlationId
+});
+```
+
+### Metrics & Alerting
+- Application performance metrics
+- Business metrics tracking
+- Error rate monitoring
+- Health check endpoints
+
+## Critical Don'ts
+
+❌ **NEVER:**
+- Leave console.log statements in production code
+- Use magic numbers or strings without constants
+- Implement features without tests
+- Ignore TypeScript warnings
+- Create circular dependencies
+- Implement without considering error cases
+- Skip code reviews for "small" changes
+- Deploy without proper testing
+- Hardcode configuration values
+- Ignore performance implications
+
+## Time & Flow Management
+
+### Development Phases
+1. **Analysis Phase** (20%): Understanding requirements
+2. **Design Phase** (30%): Architecture and planning
+3. **Implementation Phase** (40%): Coding and testing
+4. **Review Phase** (10%): Code review and optimization
+
+### Critical Path Identification
+- Identify dependencies between components
+- Plan for integration points early
+- Consider deployment complexity
+- Account for testing time in estimates
+
+This rule enforces ZERO TOLERANCE for inefficient, redundant, or unprofessional code while ensuring expert-level architecture and development practices.
+
+## Core Philosophy
+- EXTREME EFFICIENCY: Every line of code must serve a purpose
+- ZERO REDUNDANCY: No duplicate logic, no unnecessary abstractions
+- SENIOR-LEVEL EXECUTION: Code like someone with 10+ years experience
+- NO FLUFF: No redundant print statements, unnecessary comments, or verbose logging
+
+## Project Structure & Architecture
+
+### Directory Organization
+```
+project/
+├── src/
+│   ├── core/           # Core business logic (pure functions)
+│   ├── infrastructure/ # External integrations, databases, APIs
+│   ├── interfaces/     # Controllers, CLI, web handlers
+│   ├── shared/         # Utilities, types, constants
+│   └── tests/          # Mirror src structure
+├── docs/              # Architecture decisions, API specs
+├── scripts/           # Build, deployment, maintenance
+└── config/            # Environment-specific configurations
+```
+
+### File Naming Conventions
+- **Services**: `user.service.ts`, `payment.service.ts`
+- **Types**: `user.types.ts`, `api.types.ts`
+- **Utilities**: `date.utils.ts`, `validation.utils.ts`
+- **Constants**: `app.constants.ts`, `api.constants.ts`
+- **Tests**: `user.service.test.ts`, `utils.test.ts`
+
+## Code Standards
+
+### Functional Programming First
+- Pure functions with explicit inputs/outputs
+- No side effects unless absolutely necessary
+- Immutable data structures by default
+- Higher-order functions over repetitive code patterns
+
+### Error Handling (Zero Tolerance)
+```typescript
+// GOOD: Explicit error handling
+function processUser(id: string): Result<User, ProcessingError> {
+  if (!isValidId(id)) {
+    return failure(new ValidationError('Invalid user ID format'));
+  }
+  // Processing logic
+}
+
+// BAD: Silent failures or generic errors
+function processUser(id: string): User | null {
+  try {
+    // logic that might fail silently
+  } catch (e) {
+    return null; // Information loss
+  }
+}
+```
+
+### Type Safety (Mandatory)
+- Strict TypeScript configuration
+- No `any` types except for truly dynamic content
+- Interface over type aliases for objects
+- Discriminated unions for complex state management
+- Generic constraints for reusable functions
+
+### Architecture Patterns
+
+#### Clean Architecture Layers
+1. **Domain Layer**: Business rules (no dependencies)
+2. **Application Layer**: Use cases, orchestration
+3. **Infrastructure Layer**: External concerns (DB, APIs)
+4. **Interface Layer**: Controllers, CLI, web handlers
+
+#### Dependency Injection
+```typescript
+// Interface in domain layer
+interface UserRepository {
+  findById(id: string): Promise<User | null>;
+}
+
+// Implementation in infrastructure layer
+class DatabaseUserRepository implements UserRepository {
+  constructor(private db: Database) {}
+  // Implementation
+}
+
+// Usage in application layer (dependency injected)
+class UserService {
+  constructor(private userRepo: UserRepository) {}
+}
+```
+
+## Development Workflow
+
+### Pre-Code Planning (MANDATORY)
+1. **Problem Analysis**: Understand root cause, not symptoms
+2. **Pseudocode**: Write algorithmic steps before implementation
+3. **Interface Design**: Define types and contracts first
+4. **Test Cases**: Consider edge cases and failure modes
+5. **Performance Considerations**: Identify potential bottlenecks
+
+### Code Implementation Flow
+1. **Write Types First**: Define data structures and interfaces
+2. **Implement Core Logic**: Pure functions, business rules
+3. **Add Infrastructure**: Database, API integrations
+4. **Create Interfaces**: Controllers, CLI commands
+5. **Write Tests**: Unit, integration, end-to-end
+6. **Optimize**: Profile and improve performance bottlenecks
+
+### Testing Strategy
+```typescript
+// Test structure follows AAA pattern
+describe('UserService', () => {
+  it('should create user with valid data', async () => {
+    // Arrange
+    const userData = createValidUserData();
+    const mockRepo = createMockUserRepository();
+    const service = new UserService(mockRepo);
+
+    // Act
+    const result = await service.createUser(userData);
+
+    // Assert
+    expect(result.isSuccess).toBe(true);
+    expect(mockRepo.save).toHaveBeenCalledWith(userData);
+  });
+});
+```
+
+## Performance & Optimization
+
+### Database Operations
+- Use connection pooling
+- Implement query optimization
+- Add proper indexing strategies
+- Use transactions for data consistency
+- Implement caching layers (Redis, in-memory)
+
+### API Design
+- RESTful resource design
+- Proper HTTP status codes
+- Request/response validation
+- Rate limiting implementation
+- Comprehensive error responses
+
+### Memory Management
+- Avoid memory leaks in event listeners
+- Implement proper cleanup in long-running processes
+- Use weak references for caches
+- Profile memory usage in production
+
+## Security Considerations
+
+### Input Validation
+- Validate all external inputs
+- Sanitize data before database operations
+- Use parameterized queries (prevent SQL injection)
+- Implement rate limiting on public endpoints
+
+### Authentication & Authorization
+- JWT with proper expiration
+- Role-based access control (RBAC)
+- Secure session management
+- Input sanitization for XSS prevention
+
+## Git & Version Control
+
+### Commit Standards
+```
+type(scope): subject
+
+body (optional)
+
+footer (optional)
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Branch Strategy
+- `main`: Production-ready code
+- `develop`: Integration branch
+- `feature/TICKET-123-description`: Feature development
+- `hotfix/TICKET-456-description`: Production fixes
+
+### Code Review Checklist
+- [ ] Code follows architecture patterns
+- [ ] Tests cover critical paths
+- [ ] No performance regressions
+- [ ] Security considerations addressed
+- [ ] Documentation updated
+- [ ] No debugging code left behind
+
+## Documentation Standards
+
+### Code Documentation
+- Document WHY, not WHAT
+- Include examples for complex functions
+- Document API contracts with OpenAPI
+- Maintain architecture decision records (ADRs)
+
+### README Structure
+```markdown
+# Project Name
+Brief description
+
+## Quick Start
+Installation and basic usage
+
+## Architecture
+High-level system design
+
+## Development
+Setup, testing, deployment
+
+## Contributing
+Guidelines for contributors
+```
+
+## Deployment & DevOps
+
+### CI/CD Pipeline
+1. **Code Quality**: Linting, type checking
+2. **Testing**: Unit, integration, e2e tests
+3. **Security**: Dependency scanning, SAST
+4. **Build**: Compilation, bundling
+5. **Deploy**: Staging → Production
+
+### Environment Management
+- Use environment variables for configuration
+- Implement proper secret management
+- Container-based deployments (Docker)
+- Infrastructure as Code (Terraform, CloudFormation)
+
+## Monitoring & Observability
+
+### Logging Strategy
+```typescript
+// Structured logging with context
+logger.info('User created', {
+  userId: user.id,
+  email: user.email,
+  timestamp: new Date().toISOString(),
+  correlationId: req.correlationId
+});
+```
+
+### Metrics & Alerting
+- Application performance metrics
+- Business metrics tracking
+- Error rate monitoring
+- Health check endpoints
+
+## Critical Don'ts
+
+❌ **NEVER:**
+- Leave console.log statements in production code
+- Use magic numbers or strings without constants
+- Implement features without tests
+- Ignore TypeScript warnings
+- Create circular dependencies
+- Implement without considering error cases
+- Skip code reviews for "small" changes
+- Deploy without proper testing
+- Hardcode configuration values
+- Ignore performance implications
+
+## Time & Flow Management
+
+### Development Phases
+1. **Analysis Phase** (20%): Understanding requirements
+2. **Design Phase** (30%): Architecture and planning
+3. **Implementation Phase** (40%): Coding and testing
+4. **Review Phase** (10%): Code review and optimization
+
+### Critical Path Identification
+- Identify dependencies between components
+- Plan for integration points early
+- Consider deployment complexity
+- Account for testing time in estimates
+
+This rule enforces ZERO TOLERANCE for inefficient, redundant, or unprofessional code while ensuring expert-level architecture and development practices.
